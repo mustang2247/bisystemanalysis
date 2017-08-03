@@ -75,13 +75,13 @@ public class SQLManager {
 	}
 
 	public static void main(String[] args) throws SQLException {
-		String ip = "192.168.170.10";
+		String ip = "localhost";
 
 		SQLManager mysql = new SQLManager(ip, "3306", "realOD",
 				"ghchen", "ghchen");
 
-		mysql = new SQLManager(ip, "3306", "realTimeTraffic",
-				"ghchen", "ghchen");
+		mysql = new SQLManager(ip, "3306", "biserveranalysis",
+				"root", "mustang");
 		String s = mysql.select("select * from realTimeTraffic.roadSpeed;");
 		System.out.println(s);
 
