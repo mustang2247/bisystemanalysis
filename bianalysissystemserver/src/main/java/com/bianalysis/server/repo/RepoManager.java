@@ -2,11 +2,14 @@ package com.bianalysis.server.repo;
 
 import com.bianalysis.server.conf.MysqlCfg;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 
 public class RepoManager {
+    private static final Logger logger = LoggerFactory.getLogger(RepoManager.class);
 
     private static ComboPooledDataSource cpds;
     private static BiRepo biRepo;
@@ -16,7 +19,7 @@ public class RepoManager {
         MysqlCfg config = new MysqlCfg();
         config.init( filePath );
 
-        cpds = new ComboPooledDataSource( "BiServer" );
+        cpds = new ComboPooledDataSource("bianalysissystemserver");
         cpds.setDriverClass( "com.mysql.jdbc.Driver" );
         cpds.setJdbcUrl( "jdbc:mysql://" + config.ADDR + "/" + config.DB_NAME + "?useUnicode=true&characterEncoding=utf-8" );
         cpds.setUser( config.LOGIN_NAME );
@@ -32,6 +35,8 @@ public class RepoManager {
 
         biRepo = new BiRepo( cpds );
         sqlRepo = new SqlRepo( cpds );
+
+        logger.info("init DataSource ok");
 
         return true;
     }

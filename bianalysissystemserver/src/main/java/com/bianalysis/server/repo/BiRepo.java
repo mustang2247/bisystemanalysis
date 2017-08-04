@@ -7,13 +7,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * bi报送
+ */
 public class BiRepo extends BaseRepo {
 
-    public BiRepo( ComboPooledDataSource cpds ) {
+    public BiRepo(ComboPooledDataSource cpds ) {
         this.cpds = cpds;
     }
 
-    public boolean update( String sql, String[] values ) throws SQLException {
+    public boolean update(String sql, String[] values ) throws SQLException {
 
         Connection conn = null;
         PreparedStatement preState = null;
@@ -30,8 +33,7 @@ public class BiRepo extends BaseRepo {
 
             int rowsAffected = preState.executeUpdate();
             return rowsAffected == 1;
-        }
-        finally {
+        } finally {
             if( preState != null ) preState.close();
             if( conn != null ) conn.close();
         }
@@ -59,12 +61,10 @@ public class BiRepo extends BaseRepo {
             long END = System.currentTimeMillis();
             logger.debug( "BiRepo::batchUpdate cost {} {}", MID - BEG, END - MID );
             return rowsAffected == values.size();
-        }
-        catch( SQLException e ) {
+        } catch( SQLException e ) {
             logger.error( e.getMessage() + "SQL = " + sql, e );
             throw e;
-        }
-        finally {
+        } finally {
             if( preState != null ) preState.close();
             if( conn != null ) conn.close();
         }

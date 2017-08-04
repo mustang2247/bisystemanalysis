@@ -8,19 +8,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * 查询信息
+ */
 public class SqlRepo extends BaseRepo {
 
-    public SqlRepo( ComboPooledDataSource cpds ) {
+    public SqlRepo(ComboPooledDataSource cpds ) {
         this.cpds = cpds;
     }
 
-    public boolean updateData( String sql ) throws SQLException {
+    public boolean updateData(String sql ) throws SQLException {
         return update( sql );
     }
 
     // ================= 合并统计开始 ==================== //
 
-    public long getLong( String sql ) throws SQLException {
+    public long getLong(String sql ) throws SQLException {
         return query( sql, rs -> {
             if( rs.next() ) {
                 return rs.getLong( 1 );
@@ -34,7 +37,7 @@ public class SqlRepo extends BaseRepo {
             if( rs.next() ) {
                 int cols = rs.getMetaData().getColumnCount();
                 String val = "";
-                for( int i = 1; i < cols; ++i ) val += rs.getString( i ) + "\n";
+                for(int i = 1; i < cols; ++i ) val += rs.getString( i ) + "\n";
                 val += rs.getString( cols );
                 return val;
             }
@@ -58,7 +61,7 @@ public class SqlRepo extends BaseRepo {
             while( rs.next() ) {
                 int cols = rs.getMetaData().getColumnCount();
                 String val = "";
-                for( int i = 1; i < cols; ++i ) val += rs.getString( i ) + "\n";
+                for(int i = 1; i < cols; ++i ) val += rs.getString( i ) + "\n";
                 val += rs.getString( cols );
                 rv.add( val );
             }
@@ -85,7 +88,7 @@ public class SqlRepo extends BaseRepo {
                 int cols = rs.getMetaData().getColumnCount();
                 long key = rs.getLong( 1 );
                 String val = "";
-                for( int i = 2; i < cols; ++i ) val += rs.getString( i ) + "\n";
+                for(int i = 2; i < cols; ++i ) val += rs.getString( i ) + "\n";
                 val += rs.getString( cols );
                 rv.put( key, val );
             }

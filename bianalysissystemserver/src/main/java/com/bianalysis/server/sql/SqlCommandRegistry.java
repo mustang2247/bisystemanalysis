@@ -2,6 +2,8 @@ package com.bianalysis.server.sql;
 
 
 import com.bianalysis.server.utils.PropUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.xml.parsers.SAXParserFactory;
 import java.sql.SQLException;
@@ -9,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SqlCommandRegistry {
+
+    private static final Logger logger = LoggerFactory.getLogger(SqlCommandRegistry.class);
 
     private static final SqlCommandRegistry INSTANCE = new SqlCommandRegistry();
 
@@ -44,6 +48,8 @@ public class SqlCommandRegistry {
         for( SqlCommand cmd : mapping.values() ) {
             cmd.init();
         }
+
+        logger.info("SqlCommand init ok");
     }
 
     public void end() throws SQLException {

@@ -71,11 +71,19 @@ public class SqlCommand {
             }
         }
         if( tmp != null ) {
+            // batch的方式发送
             ret = RepoManager.getBiRepo().batchUpdate( batchSql, tmp );
         }
         return ret;
     }
 
+    /**
+     * 因为命令是以batch的方式发送，可能会导致退出时还有一些命令有堆积的数据没有发送
+     * 那么先将其发送
+     *
+     * @return
+     * @throws SQLException
+     */
     public boolean end() throws SQLException {
         List< String[] > tmp = null;
         synchronized( this ) {
