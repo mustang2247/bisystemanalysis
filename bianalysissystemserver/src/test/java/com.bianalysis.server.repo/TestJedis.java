@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 
 /**
- * @Date Aug 6, 2015
- * @Author dengjie
- * @Note TODO
+ * 测试redis
  */
 public class TestJedis {
 

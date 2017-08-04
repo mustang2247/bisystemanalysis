@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
+/**
+ * 测试 mysql
+ */
 public class TestMysql {
 
     private static final Logger logger = LoggerFactory.getLogger(TestMysql.class);
