@@ -3,10 +3,10 @@ package com.bianalysis.server.repo;
 import com.bianalysis.server.sql.SqlCommand;
 import com.bianalysis.server.sql.SqlCommandRegistry;
 import com.bianalysis.server.utils.PropUtil;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.beans.PropertyVetoException;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -16,7 +16,8 @@ public class TestMysql {
 
     private static final Logger logger = LoggerFactory.getLogger(TestMysql.class);
 
-    public static void main(String[] args) throws PropertyVetoException, SQLException {
+    @Test
+    public void testSql() {
         String envDir = PropUtil.getProp("/env.properties", "envdir");
 
 
@@ -43,7 +44,7 @@ public class TestMysql {
                 values = new String[]{(i + 1) + "", "deviceid_" + i, dateTimeFormatter.format(date), dateTimeFormatter.format(date), dateFormatter.format(date), timeFormatter.format(date), "", "", ""};
                 try {
                     if (!cmd.push(values)) {
-                        logger.error("Fail report op:{} args: {}", "install", Arrays.asList(args));
+                        logger.error("Fail report op:{} args: {}", "install", Arrays.asList(values));
                     } else {
                     }
                 } catch (SQLException e) {
@@ -54,6 +55,6 @@ public class TestMysql {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
 }
