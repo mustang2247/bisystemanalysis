@@ -1,6 +1,7 @@
 package com.bianalysis.server.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 
@@ -33,9 +34,20 @@ public class JSONUtils
      * @param text
      * @return
      */
-    public static Object toJSONString(String text)
+    public static Object toObject(String text)
     {
         return JSON.parse(text);
     }
+
+    /**
+     * 将json转换为对象
+     *
+     * @param text
+     * @return
+     */
+    public static JSONObject toJSONObject(String text) {
+        return JSON.parseObject(text);
+    }
+
 
 }

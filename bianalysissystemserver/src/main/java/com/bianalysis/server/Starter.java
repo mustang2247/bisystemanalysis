@@ -2,6 +2,7 @@ package com.bianalysis.server;
 
 import com.bianalysis.server.repo.RepoManager;
 import com.bianalysis.server.sql.SqlCommandRegistry;
+import com.bianalysis.server.storm.BiTopology;
 import com.bianalysis.server.utils.PropUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,8 @@ public class Starter {
             RepoManager.init("/" + envDir + "mysql.properties");
             // redis init
 //            JedisFactory.getJedisInstance("/" + envDir + "redis.properties");
+
+            BiTopology.init(args);
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

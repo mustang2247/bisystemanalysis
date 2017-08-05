@@ -3,7 +3,7 @@ package com.bianalysis.server.conf;
 /**
  * 配置文件
  */
-public class ConfigContent {
+public class ConfigConstent {
     /**
      * redis 信息
      */
@@ -19,10 +19,8 @@ public class ConfigContent {
     public final static int MAX_WAIT = 10000;
     public final static int TIMEOUT = 10 * 1000;
 
-    public static final String ELASTIC_CLUSTER_NAME = "ElasticClusterName";
-    public static final String DEFAULT_ELASTIC_CLUSTER = "LogStorm";
 
-    public static final String COUNT_CF_NAME = "LogVolumeByMinute";
-    public static final String LOGGING_KEYSPACE = "Logging";
+    //================date================
+    public static final String LOG_CHANNEL = "log";
 
 }
