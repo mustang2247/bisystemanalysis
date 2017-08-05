@@ -1,6 +1,5 @@
 package com.bianalysis.server;
 
-import com.bianalysis.server.repo.JedisFactory;
 import com.bianalysis.server.repo.RepoManager;
 import com.bianalysis.server.sql.SqlCommandRegistry;
 import com.bianalysis.server.utils.PropUtil;
@@ -20,7 +19,7 @@ public class Starter {
             // init mysql datasource
             RepoManager.init("/" + envDir + "mysql.properties");
             // redis init
-            JedisFactory.getJedisInstance("/" + envDir + "redis.properties");
+//            JedisFactory.getJedisInstance("/" + envDir + "redis.properties");
 
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

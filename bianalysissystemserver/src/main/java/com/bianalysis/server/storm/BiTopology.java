@@ -1,6 +1,6 @@
 package com.bianalysis.server.storm;
 
-import com.bianalysis.server.conf.Conf;
+import com.bianalysis.server.conf.ConfigContent;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.StormSubmitter;
@@ -36,7 +36,7 @@ public class BiTopology {
         // The persister for the stem analysis (need to check the counting
         // capability first on storm-cassandra)
 
-        conf.put(Conf.REDIS_PORT_KEY, Conf.DEFAULT_JEDIS_PORT);
+        conf.put(ConfigContent.REDIS_PORT_KEY, ConfigContent.DEFAULT_JEDIS_PORT);
     }
 
 
@@ -59,7 +59,7 @@ public class BiTopology {
      */
     public void runLocal(int runTime) {
         conf.setDebug(true);
-        conf.put(Conf.REDIS_HOST_KEY, "localhost");
+        conf.put(ConfigContent.REDIS_HOST_KEY, "localhost");
 //        conf.put(CassandraBolt.CASSANDRA_HOST, "localhost:9171");
         cluster = new LocalCluster();
         cluster.submitTopology("test", conf, builder.createTopology());
@@ -84,7 +84,7 @@ public class BiTopology {
      */
     public void runCluster(String name, String redisHost, String cassandraHost) throws InvalidTopologyException, AuthorizationException, AlreadyAliveException {
         conf.setNumWorkers(20);
-        conf.put(Conf.REDIS_HOST_KEY, redisHost);
+        conf.put(ConfigContent.REDIS_HOST_KEY, redisHost);
 //        conf.put(CassandraBolt.CASSANDRA_HOST,cassandraHost);
         StormSubmitter.submitTopology(name, conf, builder.createTopology());
     }
