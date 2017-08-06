@@ -19,9 +19,9 @@ import java.util.Map;
 /**
  * 设备安装
  */
-public class InstallSpout extends BaseRichSpout {
+public class StartUpSpout extends BaseRichSpout {
 
-    private static final Logger logger = LoggerFactory.getLogger(InstallSpout.class);
+    private static final Logger logger = LoggerFactory.getLogger(StartUpSpout.class);
 
     private SpoutOutputCollector collector;
 
@@ -32,7 +32,7 @@ public class InstallSpout extends BaseRichSpout {
      */
     @Override
     public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declareStream(FieldNames.STREAM_INSTALL,
+        outputFieldsDeclarer.declareStream(FieldNames.STREAM_STARTUP,
                 new Fields("appid", "context"));
     }
 
@@ -56,9 +56,9 @@ public class InstallSpout extends BaseRichSpout {
     @Override
     public void nextTuple() {
         try {
-            String content = RedisManager.getJedis().rpop(FieldNames.STREAM_INSTALL);
+            String content = RedisManager.getJedis().rpop(FieldNames.STREAM_STARTUP);
             if (content != null && content != "") {
-                logger.info(FieldNames.STREAM_INSTALL + "  :   " + "   content:   " + content);
+                logger.info(FieldNames.STREAM_STARTUP + "  :   " + "   content:   " + content);
                 if (content == null || "nil".equals(content)) {
                     try {
                         Thread.sleep(300);
@@ -70,7 +70,7 @@ public class InstallSpout extends BaseRichSpout {
                         if (object.get("appid") == null || object.get("appid") == "" || object.get("context") == null || object.get("context") == "") {
                             return;
                         }
-                        collector.emit(FieldNames.STREAM_INSTALL, new Values(object.get("appid"), object.get("context")));
+                        collector.emit(FieldNames.STREAM_STARTUP, new Values(object.get("appid"), object.get("context")));
                     } catch (Exception e) {
                         logger.info(e.getMessage());
                     }

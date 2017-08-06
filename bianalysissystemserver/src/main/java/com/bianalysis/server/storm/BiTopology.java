@@ -3,7 +3,10 @@ package com.bianalysis.server.storm;
 import com.bianalysis.server.conf.ConfigConstent;
 import com.bianalysis.server.conf.FieldNames;
 import com.bianalysis.server.storm.bolt.InstallBolt;
+import com.bianalysis.server.storm.bolt.RuleBolt;
+import com.bianalysis.server.storm.bolt.StartUpBolt;
 import com.bianalysis.server.storm.sport.InstallSpout;
+import com.bianalysis.server.storm.sport.StartUpSpout;
 import org.apache.storm.Config;
 import org.apache.storm.LocalCluster;
 import org.apache.storm.StormSubmitter;
@@ -31,21 +34,24 @@ public class BiTopology {
 //        builder.setBolt("indexer", new IndexerBolt(), 10).shuffleGrouping(
 //                "logRules");
 //        builder.setBolt("counter", new VolumeCountingBolt(), 10).shuffleGrouping("logRules");
-//
 //        builder.setBolt("countPersistor", logPersistenceBolt, 10)
 //                .shuffleGrouping("counter");
 
-        // Maybe add:
-        // Stem and stop word counting per file
-        // The persister for the stem analysis (need to check the counting
-        // capability first on storm-cassandra)
-
         // 设置sport
         builder.setSpout(FieldNames.STREAM_INSTALL, new InstallSpout(), 2);
+        builder.setSpout(FieldNames.STREAM_STARTUP, new StartUpSpout(), 2);
 
+        // 规则过滤
+        builder.setBolt("rules_bolt", new RuleBolt(), 10)
+                .fieldsGrouping(FieldNames.STREAM_INSTALL, FieldNames.STREAM_INSTALL, new Fields("appid"))
+                .fieldsGrouping(FieldNames.STREAM_STARTUP, FieldNames.STREAM_STARTUP, new Fields("appid"))
+        ;
 
-        builder.setBolt(FieldNames.STREAM_INSTALL + "_BOLT", new InstallBolt(), 10)
+        builder.setBolt(FieldNames.STREAM_INSTALL + "_BOLT", new InstallBolt(), 2)
                 .fieldsGrouping(FieldNames.STREAM_INSTALL, FieldNames.STREAM_INSTALL, new Fields("appid"));
+
+//        builder.setBolt(FieldNames.STREAM_STARTUP + "_BOLT", new StartUpBolt(), 2)
+//                .shuffleGrouping("appid");
 
         // 配置配置文件
         // 实时计算不需要可靠消息，故关闭Acker节省通讯资源
@@ -80,7 +86,7 @@ public class BiTopology {
 //        conf.put(ConfigConstent.REDIS_HOST_KEY, "localhost");
 //        conf.put(CassandraBolt.CASSANDRA_HOST, "localhost:9171");
         cluster = new LocalCluster();
-        cluster.submitTopology("bianalysissystemserver-test", conf, builder.createTopology());
+        cluster.submitTopology("bisystem-test", conf, builder.createTopology());
         if (runTime > 0) {
             Utils.sleep(runTime);
             shutDownLocal();
@@ -92,7 +98,7 @@ public class BiTopology {
      */
     public void shutDownLocal() {
         if (cluster != null) {
-            cluster.killTopology("bianalysissystemserver-test");
+            cluster.killTopology("bisystem-test");
             cluster.shutdown();
         }
     }
