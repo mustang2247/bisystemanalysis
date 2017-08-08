@@ -134,26 +134,6 @@
         </profile>
 
         <profile>
-            <id>hoolaitest</id>
-            <properties>
-                <envdir>hoolaitest/</envdir>
-                <log4j.level>DEBUG</log4j.level>
-                <log4j.appender>dailyLog</log4j.appender>
-                <log.dir>/logs/biserver</log.dir>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>tencent</id>
-            <properties>
-                <envdir>tencent/</envdir>
-                <log4j.level>DEBUG</log4j.level>
-                <log4j.appender>dailyLog</log4j.appender>
-                <log.dir>/logs/biserver</log.dir>
-            </properties>
-        </profile>
-
-        <profile>
             <id>qcloud</id>
             <properties>
                 <envdir>qcloud/</envdir>
@@ -163,15 +143,6 @@
             </properties>
         </profile>
 
-        <profile>
-            <id>qopen</id>
-            <properties>
-                <envdir>qopen/</envdir>
-                <log4j.level>DEBUG</log4j.level>
-                <log4j.appender>dailyLog</log4j.appender>
-                <log.dir>/logs/biserver</log.dir>
-            </properties>
-        </profile>
     </profiles>
 
 </project>
