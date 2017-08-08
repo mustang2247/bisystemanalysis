@@ -3,7 +3,7 @@ package com.bianalysis.data;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bianalysis.server.conf.FieldNames;
-import com.bianalysis.server.repo.RedisManager;
+import com.bianalysis.server.redis.RedisManager;
 import com.bianalysis.server.repo.TestMysql;
 import org.junit.Test;
 import org.slf4j.Logger;
