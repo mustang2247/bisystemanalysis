@@ -4,12 +4,6 @@ package com.bianalysis.server.conf;
  * 配置文件
  */
 public class ConfigConstent {
-    /**
-     * redis 信息
-     */
-    public static final String REDIS_HOST_KEY = "redisHost";
-    public static final String REDIS_PORT_KEY = "redisPort";
-    public static final String DEFAULT_JEDIS_PORT = "6379";
 
     //如果赋值为-1，则表示不限制；如果pool已经分配了maxActive个jedis实例，则此时pool的状态为exhausted(耗尽)
     public final static int MAX_ACTIVE = 5000;
