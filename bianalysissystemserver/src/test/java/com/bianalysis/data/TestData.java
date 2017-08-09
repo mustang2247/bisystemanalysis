@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bianalysis.server.conf.FieldNames;
 import com.bianalysis.server.redis.RedisManager;
-import com.bianalysis.server.repo.TestMysql;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TestData {
-    private static final Logger logger = LoggerFactory.getLogger(TestMysql.class);
+    private static final Logger logger = LoggerFactory.getLogger(TestData.class);
 
     /**
      * install 测试数据
