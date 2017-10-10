@@ -22,7 +22,6 @@ import java.util.Map;
 public class InstallSpout extends BaseRichSpout {
 
     private static final Logger logger = LoggerFactory.getLogger(InstallSpout.class);
-
     private SpoutOutputCollector collector;
 
     /**
@@ -80,4 +79,10 @@ public class InstallSpout extends BaseRichSpout {
             logger.info(e.getMessage());
         }
     }
+
+    @Override
+    public void close() {
+        super.close();
+    }
+
 }
