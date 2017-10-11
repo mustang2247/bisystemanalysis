@@ -1,18 +1,21 @@
 package com.bianalysis.server.storm;
 
+import com.bianalysis.server.conf.ConfigConstent;
 import com.bianalysis.server.conf.FieldNames;
 import com.bianalysis.server.storm.bolt.InstallBolt;
 import com.bianalysis.server.storm.bolt.RuleBolt;
+import com.bianalysis.server.storm.bolt.StartUpBolt;
 import com.bianalysis.server.storm.sport.InstallSpout;
 import com.bianalysis.server.storm.sport.StartUpSpout;
-import com.twitter.heron.api.Config;
-import com.twitter.heron.api.HeronSubmitter;
-import com.twitter.heron.api.exception.AlreadyAliveException;
-import com.twitter.heron.api.exception.InvalidTopologyException;
-import com.twitter.heron.api.topology.TopologyBuilder;
-import com.twitter.heron.api.tuple.Fields;
-import com.twitter.heron.api.utils.Utils;
-import com.twitter.heron.simulator.Simulator;
+import org.apache.storm.Config;
+import org.apache.storm.LocalCluster;
+import org.apache.storm.StormSubmitter;
+import org.apache.storm.generated.AlreadyAliveException;
+import org.apache.storm.generated.AuthorizationException;
+import org.apache.storm.generated.InvalidTopologyException;
+import org.apache.storm.topology.TopologyBuilder;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +24,7 @@ public class BiTopology {
 
     private TopologyBuilder builder = new TopologyBuilder();
     private Config conf = new Config();
-    private Simulator cluster;
+    private LocalCluster cluster;
 
     public BiTopology() {
 //        builder.setSpout("logSpout", new LogSpout(), 10);
@@ -52,7 +55,7 @@ public class BiTopology {
 
         // 配置配置文件
         // 实时计算不需要可靠消息，故关闭Acker节省通讯资源
-        ///conf.setNumAckers(0);
+        conf.setNumAckers(0);
         // 设置独立Java进程数，一般设为同spout和bolt的总tasks数量相等或更多
         // 使每个task都运行在独立的Java进程中，
         // 以避免多task集中在一个jvm里运行产生GC瓶颈
@@ -65,7 +68,7 @@ public class BiTopology {
         return builder;
     }
 
-    public Simulator getLocalCluster() {
+    public LocalCluster getLocalCluster() {
         return cluster;
     }
 
@@ -82,7 +85,7 @@ public class BiTopology {
         conf.setDebug(true);
 //        conf.put(ConfigConstent.REDIS_HOST_KEY, "localhost");
 //        conf.put(CassandraBolt.CASSANDRA_HOST, "localhost:9171");
-        cluster = new Simulator();
+        cluster = new LocalCluster();
         cluster.submitTopology("bisystem-test", conf, builder.createTopology());
         if (runTime > 0) {
             Utils.sleep(runTime);
@@ -103,13 +106,11 @@ public class BiTopology {
     /**
      * 集群部署
      */
-    public void runCluster(String name, String redisHost, String cassandraHost) throws InvalidTopologyException, AlreadyAliveException {
-//        conf.setNumWorkers(20);
+    public void runCluster(String name, String redisHost, String cassandraHost) throws InvalidTopologyException, AuthorizationException, AlreadyAliveException {
+        conf.setNumWorkers(20);
 //        conf.put(ConfigConstent.REDIS_HOST_KEY, redisHost);
 //        conf.put(CassandraBolt.CASSANDRA_HOST,cassandraHost);
-//        StormSubmitter.submitTopology(name, conf, builder.createTopology());
-
-        HeronSubmitter.submitTopology(name, conf, builder.createTopology());
+        StormSubmitter.submitTopology(name, conf, builder.createTopology());
     }
 
     /**
