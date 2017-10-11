@@ -36,4 +36,16 @@ public final class TupleHelpers {
                 org.apache.storm.Constants.SYSTEM_TICK_STREAM_ID);
     }
 
+    /**
+     * 是否为设置的tick机制
+     * 一种定时机制
+     * @param tuple
+     * @return
+     */
+    public static boolean isTickTuple(com.twitter.heron.api.tuple.Tuple tuple) {
+        return tuple.getSourceComponent().equals(Constants.SYSTEM_COMPONENT_ID)
+                && tuple.getSourceStreamId().equals(
+                Constants.SYSTEM_TICK_STREAM_ID);
+    }
+
 }

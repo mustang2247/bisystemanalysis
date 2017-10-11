@@ -11,10 +11,7 @@ import java.nio.channels.GatheringByteChannel;
 import java.nio.channels.SocketChannel;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -629,6 +626,10 @@ public class Util {
             throw new RuntimeException(e);
         }
         return result;
+    }
+
+    public static long secureRandomLong() {
+        return UUID.randomUUID().getLeastSignificantBits();
     }
 
 }

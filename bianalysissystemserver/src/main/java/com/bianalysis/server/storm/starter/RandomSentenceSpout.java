@@ -17,13 +17,14 @@
  */
 package com.bianalysis.server.storm.starter;
 
-import org.apache.storm.spout.SpoutOutputCollector;
-import org.apache.storm.task.TopologyContext;
-import org.apache.storm.topology.OutputFieldsDeclarer;
-import org.apache.storm.topology.base.BaseRichSpout;
-import org.apache.storm.tuple.Fields;
-import org.apache.storm.tuple.Values;
-import org.apache.storm.utils.Utils;
+import com.bianalysis.server.utils.Util;
+import com.twitter.heron.api.spout.BaseRichSpout;
+import com.twitter.heron.api.spout.SpoutOutputCollector;
+import com.twitter.heron.api.topology.OutputFieldsDeclarer;
+import com.twitter.heron.api.topology.TopologyContext;
+import com.twitter.heron.api.tuple.Fields;
+import com.twitter.heron.api.tuple.Values;
+import com.twitter.heron.api.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,8 @@ public class RandomSentenceSpout extends BaseRichSpout {
                 "snow white and the seven dwarfs", "i am at two with nature" };
         String sentence = sentences[_rand.nextInt(sentences.length)];
         
-        long messageId =  Utils.secureRandomLong();
+        long messageId = Util.secureRandomLong();
+//        long messageId =  Utils.secureRandomLong();
         _collector.emit(new Values(sentence), messageId);
     }
 

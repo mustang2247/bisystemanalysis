@@ -15,4 +15,7 @@ public class Constants {
     public static final String SMALLES_TIME_STRING = "smallest";
     public static final String LARGEST_TIME_STRING = "largest";
 
+    public static final String SYSTEM_COMPONENT_ID = "__system";
+    public static final String SYSTEM_TICK_STREAM_ID = "__tick";
+
 }

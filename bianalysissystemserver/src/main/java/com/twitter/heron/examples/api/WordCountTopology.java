@@ -49,157 +49,160 @@ import com.twitter.heron.simulator.Simulator;
  * and updates the count when it receives a tuple.
  */
 public final class WordCountTopology {
-  private WordCountTopology() {
-  }
-
-  // Utils class to generate random String at given length
-  public static class RandomString {
-    private final char[] symbols;
-
-    private final Random random = new Random();
-
-    private final char[] buf;
-
-    public RandomString(int length) {
-      // Construct the symbol set
-      StringBuilder tmp = new StringBuilder();
-      for (char ch = '0'; ch <= '9'; ++ch) {
-        tmp.append(ch);
-      }
-
-      for (char ch = 'a'; ch <= 'z'; ++ch) {
-        tmp.append(ch);
-      }
-
-      symbols = tmp.toString().toCharArray();
-      if (length < 1) {
-        throw new IllegalArgumentException("length < 1: " + length);
-      }
-
-      buf = new char[length];
+    private WordCountTopology() {
     }
 
-    public String nextString() {
-      for (int idx = 0; idx < buf.length; ++idx) {
-        buf[idx] = symbols[random.nextInt(symbols.length)];
-      }
+    // Utils class to generate random String at given length
+    public static class RandomString {
+        private final char[] symbols;
 
-      return new String(buf);
-    }
-  }
+        private final Random random = new Random();
 
-  /**
-   * A spout that emits a random word
-   */
-  public static class WordSpout extends BaseRichSpout {
-    private static final long serialVersionUID = 4322775001819135036L;
+        private final char[] buf;
 
-    private static final int ARRAY_LENGTH = 128 * 1024;
-    private static final int WORD_LENGTH = 20;
+        public RandomString(int length) {
+            // Construct the symbol set
+            StringBuilder tmp = new StringBuilder();
+            for (char ch = '0'; ch <= '9'; ++ch) {
+                tmp.append(ch);
+            }
 
-    private final String[] words = new String[ARRAY_LENGTH];
+            for (char ch = 'a'; ch <= 'z'; ++ch) {
+                tmp.append(ch);
+            }
 
-    private final Random rnd = new Random(31);
+            symbols = tmp.toString().toCharArray();
+            if (length < 1) {
+                throw new IllegalArgumentException("length < 1: " + length);
+            }
 
-    private SpoutOutputCollector collector;
+            buf = new char[length];
+        }
 
+        public String nextString() {
+            for (int idx = 0; idx < buf.length; ++idx) {
+                buf[idx] = symbols[random.nextInt(symbols.length)];
+            }
 
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-      outputFieldsDeclarer.declare(new Fields("word"));
-    }
-
-    @Override
-    @SuppressWarnings("rawtypes")
-    public void open(Map map, TopologyContext topologyContext,
-                     SpoutOutputCollector spoutOutputCollector) {
-      RandomString randomString = new RandomString(WORD_LENGTH);
-      for (int i = 0; i < ARRAY_LENGTH; i++) {
-        words[i] = randomString.nextString();
-      }
-
-      collector = spoutOutputCollector;
+            return new String(buf);
+        }
     }
 
-    @Override
-    public void nextTuple() {
-      int nextInt = rnd.nextInt(ARRAY_LENGTH);
-      collector.emit(new Values(words[nextInt]));
-    }
-  }
+    /**
+     * A spout that emits a random word
+     */
+    public static class WordSpout extends BaseRichSpout {
+        private static final long serialVersionUID = 4322775001819135036L;
 
-  /**
-   * A bolt that counts the words that it receives
-   */
-  public static class ConsumerBolt extends BaseRichBolt {
-    private static final long serialVersionUID = -5470591933906954522L;
+        private static final int ARRAY_LENGTH = 128 * 1024;
+        private static final int WORD_LENGTH = 20;
 
-    private OutputCollector collector;
-    private Map<String, Integer> countMap;
+        private final String[] words = new String[ARRAY_LENGTH];
 
-    @SuppressWarnings("rawtypes")
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-      collector = outputCollector;
-      countMap = new HashMap<String, Integer>();
-    }
+        private final Random rnd = new Random(31);
 
-    @Override
-    public void execute(Tuple tuple) {
-      String key = tuple.getString(0);
-      if (countMap.get(key) == null) {
-        countMap.put(key, 1);
-      } else {
-        Integer val = countMap.get(key);
-        countMap.put(key, ++val);
-      }
-    }
+        private SpoutOutputCollector collector;
 
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-    }
-  }
 
-  /**
-   * Main method
-   */
-  public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException {
-    if (args.length < 1) {
-      throw new RuntimeException("Specify topology name");
+        @Override
+        public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
+            outputFieldsDeclarer.declare(new Fields("word"));
+        }
+
+        @Override
+        @SuppressWarnings("rawtypes")
+        public void open(Map map, TopologyContext topologyContext,
+                         SpoutOutputCollector spoutOutputCollector) {
+            RandomString randomString = new RandomString(WORD_LENGTH);
+            for (int i = 0; i < ARRAY_LENGTH; i++) {
+                words[i] = randomString.nextString();
+            }
+
+            collector = spoutOutputCollector;
+        }
+
+        @Override
+        public void nextTuple() {
+            int nextInt = rnd.nextInt(ARRAY_LENGTH);
+            collector.emit(new Values(words[nextInt]));
+        }
     }
 
-    int parallelism = 1;
-    if (args.length > 1) {
-      parallelism = Integer.parseInt(args[1]);
-    }
-    TopologyBuilder builder = new TopologyBuilder();
-    builder.setSpout("word", new WordSpout(), parallelism);
-    builder.setBolt("consumer", new ConsumerBolt(), parallelism)
-        .fieldsGrouping("word", new Fields("word"));
-    Config conf = new Config();
-    conf.setNumStmgrs(parallelism);
+    /**
+     * A bolt that counts the words that it receives
+     */
+    public static class ConsumerBolt extends BaseRichBolt {
+        private static final long serialVersionUID = -5470591933906954522L;
 
-    // configure component resources
-    Config.setComponentRam(conf, "word",
-        ByteAmount.fromMegabytes(ExampleResources.COMPONENT_RAM_MB * 2));
-    Config.setComponentRam(conf, "consumer",
-        ByteAmount.fromMegabytes(ExampleResources.COMPONENT_RAM_MB * 2));
+        private OutputCollector collector;
+        private Map<String, Integer> countMap;
 
-    // configure container resources
-    Config.setContainerDiskRequested(conf,
-        ExampleResources.getContainerDisk(2 * parallelism, parallelism));
-    Config.setContainerRamRequested(conf,
-        ExampleResources.getContainerRam(2 * parallelism, parallelism));
-    Config.setContainerCpuRequested(conf, 2);
+        @SuppressWarnings("rawtypes")
+        public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
+            collector = outputCollector;
+            countMap = new HashMap<String, Integer>();
+        }
 
-    if(!args[0].equals("test")){
-      HeronSubmitter.submitTopology(args[0], conf, builder.createTopology());
-    }else {
-      Simulator simulator = new Simulator();
-      simulator.submitTopology("test", conf, builder.createTopology());
-      Utils.sleep(10000);
-      simulator.killTopology("test");
-      simulator.shutdown();
+        @Override
+        public void execute(Tuple tuple) {
+            String key = tuple.getString(0);
+            if (countMap.get(key) == null) {
+                countMap.put(key, 1);
+            } else {
+                Integer val = countMap.get(key);
+                countMap.put(key, ++val);
+//                System.out.println("  #######word    " + key + "  :   " + ++val);
+            }
+        }
+
+        @Override
+        public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
+        }
     }
 
-  }
+    /**
+     * Main method
+     */
+    public static void main(String[] args) throws AlreadyAliveException, InvalidTopologyException {
+        if (args.length < 1) {
+            throw new RuntimeException("Specify topology name");
+        }
+
+        int parallelism = 1;
+        if (args.length > 1) {
+            parallelism = Integer.parseInt(args[1]);
+        }
+        TopologyBuilder builder = new TopologyBuilder();
+        builder.setSpout("word", new WordSpout(), parallelism);
+
+        builder.setBolt("consumer", new ConsumerBolt(), parallelism)
+                .fieldsGrouping("word", new Fields("word"));
+
+        Config conf = new Config();
+        conf.setNumStmgrs(parallelism);
+
+        // configure component resources
+        Config.setComponentRam(conf, "word",
+                ByteAmount.fromMegabytes(ExampleResources.COMPONENT_RAM_MB * 2));
+        Config.setComponentRam(conf, "consumer",
+                ByteAmount.fromMegabytes(ExampleResources.COMPONENT_RAM_MB * 2));
+
+        // configure container resources
+        Config.setContainerDiskRequested(conf,
+                ExampleResources.getContainerDisk(2 * parallelism, parallelism));
+        Config.setContainerRamRequested(conf,
+                ExampleResources.getContainerRam(2 * parallelism, parallelism));
+        Config.setContainerCpuRequested(conf, 2);
+
+        if (!args[0].equals("test")) {
+            HeronSubmitter.submitTopology(args[0], conf, builder.createTopology());
+        } else {
+            Simulator simulator = new Simulator();
+            simulator.submitTopology("test", conf, builder.createTopology());
+            Utils.sleep(10000);
+            simulator.killTopology("test");
+            simulator.shutdown();
+        }
+
+    }
 }
