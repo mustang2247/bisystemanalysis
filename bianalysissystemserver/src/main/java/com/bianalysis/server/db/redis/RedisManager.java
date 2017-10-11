@@ -1,4 +1,4 @@
-package com.bianalysis.server.redis;
+package com.bianalysis.server.db.redis;
 
 import com.bianalysis.server.conf.ConfigConstent;
 import com.bianalysis.server.conf.RedisConfig;

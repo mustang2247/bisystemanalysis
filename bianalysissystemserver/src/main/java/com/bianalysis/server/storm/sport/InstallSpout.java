@@ -3,7 +3,7 @@ package com.bianalysis.server.storm.sport;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bianalysis.server.conf.FieldNames;
-import com.bianalysis.server.redis.RedisManager;
+import com.bianalysis.server.db.redis.RedisManager;
 import com.bianalysis.server.utils.JSONUtils;
 import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;

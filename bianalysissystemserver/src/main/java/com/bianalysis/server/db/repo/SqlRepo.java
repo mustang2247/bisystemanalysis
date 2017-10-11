@@ -1,4 +1,4 @@
-package com.bianalysis.server.repo;
+package com.bianalysis.server.db.repo;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 

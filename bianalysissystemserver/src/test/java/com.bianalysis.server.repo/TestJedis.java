@@ -1,6 +1,6 @@
 package com.bianalysis.server.repo;
 
-import com.bianalysis.server.redis.RedisManager;
+import com.bianalysis.server.db.redis.RedisManager;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

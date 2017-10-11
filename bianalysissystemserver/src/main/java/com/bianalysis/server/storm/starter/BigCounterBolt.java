@@ -27,7 +27,6 @@ public class BigCounterBolt extends BaseRichBolt {
     private static final long serialVersionUID = 1L;
     
     private List<Tuple> anchors = new ArrayList<Tuple>();
-    
     private Map<String, Integer> counters = new HashMap<String, Integer>();
     
     private OutputCollector collector;

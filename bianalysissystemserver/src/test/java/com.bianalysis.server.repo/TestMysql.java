@@ -1,7 +1,9 @@
 package com.bianalysis.server.repo;
 
-import com.bianalysis.server.sql.SqlCommand;
-import com.bianalysis.server.sql.SqlCommandRegistry;
+import com.bianalysis.server.db.repo.BiRepo;
+import com.bianalysis.server.db.repo.RepoManager;
+import com.bianalysis.server.db.sql.SqlCommand;
+import com.bianalysis.server.db.sql.SqlCommandRegistry;
 import com.bianalysis.server.utils.PropUtil;
 import org.junit.Test;
 import org.slf4j.Logger;

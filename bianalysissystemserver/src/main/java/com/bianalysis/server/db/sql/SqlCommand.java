@@ -1,6 +1,6 @@
-package com.bianalysis.server.sql;
+package com.bianalysis.server.db.sql;
 
-import com.bianalysis.server.repo.RepoManager;
+import com.bianalysis.server.db.repo.RepoManager;
 
 import java.sql.SQLException;
 import java.util.LinkedList;

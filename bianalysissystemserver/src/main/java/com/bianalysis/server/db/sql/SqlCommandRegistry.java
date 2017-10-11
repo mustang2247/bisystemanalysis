@@ -1,4 +1,4 @@
-package com.bianalysis.server.sql;
+package com.bianalysis.server.db.sql;
 
 
 import com.bianalysis.server.utils.PropUtil;

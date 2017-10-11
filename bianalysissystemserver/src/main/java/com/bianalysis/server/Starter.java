@@ -1,7 +1,7 @@
 package com.bianalysis.server;
 
-import com.bianalysis.server.repo.RepoManager;
-import com.bianalysis.server.sql.SqlCommandRegistry;
+import com.bianalysis.server.db.repo.RepoManager;
+import com.bianalysis.server.db.sql.SqlCommandRegistry;
 import com.bianalysis.server.storm.BiTopology;
 import com.bianalysis.server.utils.PropUtil;
 import org.slf4j.Logger;

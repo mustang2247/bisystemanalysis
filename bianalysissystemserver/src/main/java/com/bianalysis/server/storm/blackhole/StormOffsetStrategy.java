@@ -1,6 +1,6 @@
 package com.bianalysis.server.storm.blackhole;
 
-import com.bianalysis.server.redis.RedisManager;
+import com.bianalysis.server.db.redis.RedisManager;
 import com.bianalysis.server.storm.consumer.MessagePack;
 import com.bianalysis.server.storm.consumer.OffsetStrategy;
 import org.slf4j.Logger;
