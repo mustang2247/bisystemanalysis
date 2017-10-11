@@ -1,20 +1,23 @@
 package com.bianalysis.server.storm.starter;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 最终单词统计
+ */
 @SuppressWarnings("rawtypes")
-public class FinalCounterBolt extends BaseRichBolt{
+public class FinalCounterBolt extends BaseRichBolt {
     public static final Logger LOG = LoggerFactory.getLogger(FinalCounterBolt.class);
 
     private static final long serialVersionUID = 1L;
@@ -42,7 +45,7 @@ public class FinalCounterBolt extends BaseRichBolt{
       
       totalCount += count;
       
-      LOG.info("word = " + word + ", count = " + count + ", totalCount = " + totalCount);
+      LOG.info("Final word = " + word + ", count = " + count + ", totalCount = " + totalCount);
       
       collector.emit(new Values(totalCount));
       collector.ack(tuple);

@@ -1,27 +1,17 @@
 package com.bianalysis.server.storm.sport;
 
 
-import com.alibaba.fastjson.JSONObject;
 import com.bianalysis.server.conf.FieldNames;
-import com.bianalysis.server.redis.RedisManager;
-import com.bianalysis.server.storm.blackhole.BlackholeMessageId;
-import com.bianalysis.server.storm.blackhole.MessageFetcher;
 import com.bianalysis.server.storm.blackhole.StormOffsetStrategy;
-import com.bianalysis.server.storm.consumer.Consumer;
 import com.bianalysis.server.storm.consumer.ConsumerConfig;
-import com.bianalysis.server.storm.consumer.MessagePack;
-import com.bianalysis.server.storm.consumer.MessageStream;
 import com.bianalysis.server.utils.CatMetricUtil;
 import com.bianalysis.server.utils.Constants;
-import com.bianalysis.server.utils.JSONUtils;
 import org.apache.storm.metric.api.CountMetric;
 import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichSpout;
 import org.apache.storm.tuple.Fields;
-import org.apache.storm.tuple.Values;
-import org.apache.storm.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,16 +46,16 @@ public class DAUQueueSpout extends BaseRichSpout {
     private transient StormOffsetStrategy offsetStrategy;
 
 
-    /**
-     * 消息流
-     */
-    private MessageStream stream;
-    /**
-     * 消费者
-     */
-    private Consumer consumer;
+//    /**
+//     * 消息流
+//     */
+//    private MessageStream stream;
+//    /**
+//     * 消费者
+//     */
+//    private Consumer consumer;
+//    private MessageFetcher fetchThread;
 
-    private MessageFetcher fetchThread;
     private int warnningStep = 0;
 
     /**
@@ -102,31 +92,31 @@ public class DAUQueueSpout extends BaseRichSpout {
         offsetStrategy.setSyncFrequency(syncFrequency);
         offsetStrategy.setTopic(topic);
 
-        // 消费者
-        consumer = new Consumer(topic, group, config, offsetStrategy);
-        consumer.start();
-        // 数据流
-        stream = consumer.getStream();
-
-        fetchThread = new MessageFetcher(stream);
-        new Thread(fetchThread).start();
+//        // 消费者
+//        consumer = new Consumer(topic, group, config, offsetStrategy);
+//        consumer.start();
+//        // 数据流
+//        stream = consumer.getStream();
+//
+//        fetchThread = new MessageFetcher(stream);
+//        new Thread(fetchThread).start();
     }
 
     @Override
     public void close() {
-        fetchThread.shutdown();
+//        fetchThread.shutdown();
         offsetStrategy.syncOffset();
         super.close();
     }
 
     @Override
     public void activate() {
-        new Thread(fetchThread).start();
+//        new Thread(fetchThread).start();
     }
 
     @Override
     public void deactivate() {
-        fetchThread.shutdown();
+//        fetchThread.shutdown();
         offsetStrategy.syncOffset();
     }
 
@@ -137,20 +127,24 @@ public class DAUQueueSpout extends BaseRichSpout {
      */
     @Override
     public void nextTuple() {
-        MessagePack message = fetchThread.pollMessage();
-        if (message != null) {
-            collector.emit(topic, new Values(message.getContent()),
-                    BlackholeMessageId.getMessageId(message.getPartition(), message.getOffset()));
+//        MessagePack message = fetchThread.pollMessage();
+//        if (message != null) {
+//            collector.emit(topic, new Values(message.getContent()),
+//                    BlackholeMessageId.getMessageId(message.getPartition(), message.getOffset()));
+//
+//            _spoutMetric.incr();
+//            offsetStrategy.updateOffset(message);
+//        } else {
+//            Utils.sleep(100);
+//            warnningStep++;
+//            if (warnningStep % 100 == 0) {
+//                logger.info("Queue is empty, cannot poll message.");
+//            }
+//        }
 
-            _spoutMetric.incr();
-            offsetStrategy.updateOffset(message);
-        } else {
-            Utils.sleep(100);
-            warnningStep++;
-            if (warnningStep % 100 == 0) {
-                logger.info("Queue is empty, cannot poll message.");
-            }
-        }
+        //===============================
+
+
 //        try {
 //            String content = RedisManager.getJedis().rpop(FieldNames.STREAM_INSTALL);
 //            if (content != null && content != "") {

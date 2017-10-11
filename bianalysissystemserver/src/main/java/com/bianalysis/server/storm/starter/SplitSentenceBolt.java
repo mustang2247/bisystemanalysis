@@ -1,17 +1,21 @@
 package com.bianalysis.server.storm.starter;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 
 import java.util.Map;
 
+/**
+ * 拆分句子
+ * 根据单词字符数大于5进行拆分
+ */
 @SuppressWarnings({"rawtypes"})
-public class SplitSentenceBolt  extends BaseRichBolt{
+public class SplitSentenceBolt  extends BaseRichBolt {
 
     private static final long serialVersionUID = 1L;
     
@@ -40,7 +44,7 @@ public class SplitSentenceBolt  extends BaseRichBolt{
 
     @Override
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
-        Fields fileds = new Fields("word"); 
+        Fields fileds = new Fields("word");
         declarer.declareStream("bigger", fileds);
         declarer.declareStream("smaller", fileds);        
     }

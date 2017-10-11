@@ -1,9 +1,8 @@
 package com.bianalysis.server.storm.blackhole;
 
+import com.bianalysis.server.redis.RedisManager;
 import com.bianalysis.server.storm.consumer.MessagePack;
 import com.bianalysis.server.storm.consumer.OffsetStrategy;
-import com.dianping.data.api.DPRedis;
-import com.dianping.pigeon.remoting.ServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,8 +14,6 @@ public class StormOffsetStrategy implements OffsetStrategy {
 
     private static final String TABLE_NAME = "bi.blackhole_offset.dim";
     private static final int EXPIRE = 604800;//一周的过期时间
-    private DPRedis dpRedis = ServiceFactory.getService("http://service.dianping.com/dpdata/dpredis", 
-            DPRedis.class, 500);
     
     private String consumerGroup;
     //多少条消息后，同步一次到Redis中
@@ -41,7 +38,8 @@ public class StormOffsetStrategy implements OffsetStrategy {
     public long getOffset(String topic, String partition, long endOffset, long committedOffset) {
         try {
             String key = getKey(topic);
-            String offsetValue = dpRedis.hget(TABLE_NAME, key, partition);
+            String offsetValue = RedisManager.getJedis().hget(TABLE_NAME, key);
+//            String offsetValue = RedisManager.getJedis().hget(TABLE_NAME, key, partition);
             if(offsetValue != null){
                  long offset = Long.valueOf(offsetValue) ;
                  if(offset > endOffset){
@@ -66,7 +64,8 @@ public class StormOffsetStrategy implements OffsetStrategy {
         try {
             if(offsetMap.size() > 0){
                 String key = getKey(topic);
-                dpRedis.hset(TABLE_NAME, key, offsetMap, EXPIRE);
+                RedisManager.getJedis().hset(TABLE_NAME, key, String.valueOf(offsetMap));
+//                RedisManager.getJedis().hset(TABLE_NAME, key, offsetMap, EXPIRE);
                 LOG.info("sync offset 2 redis, topic = " + topic + ", value = " + offsetMap);
                 //写入成功后，重置
                 offsetMap = new HashMap<String, String>();

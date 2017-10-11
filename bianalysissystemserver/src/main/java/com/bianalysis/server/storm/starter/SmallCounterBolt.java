@@ -1,14 +1,15 @@
 package com.bianalysis.server.storm.starter;
 
-import backtype.storm.Config;
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
-import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
-import backtype.storm.tuple.Fields;
-import backtype.storm.tuple.Tuple;
-import backtype.storm.tuple.Values;
-import com.dianping.cosmos.util.TupleHelpers;
+
+import com.bianalysis.server.utils.TupleHelpers;
+import org.apache.storm.Config;
+import org.apache.storm.task.OutputCollector;
+import org.apache.storm.task.TopologyContext;
+import org.apache.storm.topology.OutputFieldsDeclarer;
+import org.apache.storm.topology.base.BaseRichBolt;
+import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Tuple;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +18,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 短单词统计
+ */
 @SuppressWarnings({"unchecked", "rawtypes"})
-public class SmallCounterBolt extends BaseRichBolt{
+public class SmallCounterBolt extends BaseRichBolt {
     public static final Logger LOG = LoggerFactory.getLogger(SmallCounterBolt.class);
 
     private static final long serialVersionUID = 1L;
@@ -38,7 +42,7 @@ public class SmallCounterBolt extends BaseRichBolt{
     public void execute(Tuple tuple) {
        if (TupleHelpers.isTickTuple(tuple)) {
            for(Map.Entry<String, Integer> counter : counters.entrySet()){
-               LOG.info("word = " + counter.getKey() + ", count = " + counter.getValue());
+               LOG.info("Small word = " + counter.getKey() + ", count = " + counter.getValue());
                collector.emit(anchors, new Values(counter.getKey(), counter.getValue()));
            }
            counters.clear();
@@ -62,7 +66,12 @@ public class SmallCounterBolt extends BaseRichBolt{
     public void declareOutputFields(OutputFieldsDeclarer declarer) {
       declarer.declare(new Fields("word", "count"));
     }
-    
+
+    /**
+     * 在此方法的实现中可以定义以”Topology.*”开头的此bolt特定的Config
+     * 设置的tick机制
+     * @return
+     */
     @Override
     public Map getComponentConfiguration(){
          Map<String, Object> conf = new HashMap<String, Object>();

@@ -1,6 +1,6 @@
 package com.bianalysis.server.storm.consumer;
 
-import com.dp.blackhole.protocol.data.OffsetRequest;
+import com.bianalysis.server.utils.Constants;
 
 import java.util.Properties;
 
@@ -33,7 +33,7 @@ public class ConsumerConfig {
     public ConsumerConfig() {
         this.fetchSize = 1024 * 1024;//1MB
         this.maxQueuedChunks = 2;
-        this.autoOffsetReset = OffsetRequest.SMALLES_TIME_STRING;
+        this.autoOffsetReset = Constants.SMALLES_TIME_STRING;
         this.multiFetch = false;
         this.consumerTimeoutMs = -1;
     }

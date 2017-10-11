@@ -1,6 +1,6 @@
 package com.bianalysis.server.storm.consumer.decoder;
 
-import com.dp.blackhole.consumer.api.MessagePack;
+import com.bianalysis.server.storm.consumer.MessagePack;
 
 public class StringDecoder implements Decoder<String> {
     

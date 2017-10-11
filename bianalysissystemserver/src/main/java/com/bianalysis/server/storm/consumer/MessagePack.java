@@ -1,8 +1,8 @@
 package com.bianalysis.server.storm.consumer;
 
-import com.dp.blackhole.common.Util;
-import com.dp.blackhole.storage.Message;
-import com.dp.blackhole.storage.MessageAndOffset;
+import com.bianalysis.server.storm.storage.Message;
+import com.bianalysis.server.storm.storage.MessageAndOffset;
+import com.bianalysis.server.utils.Util;
 
 import java.nio.ByteBuffer;
 
