@@ -18,4 +18,9 @@ public class Constants {
     public static final String SYSTEM_COMPONENT_ID = "__system";
     public static final String SYSTEM_TICK_STREAM_ID = "__tick";
 
+
+    public static final String PARTIAL_UV_ID = "PARTIAL_UV_ID";
+    public static final String AGGREGATOR_UV_ID = "AGGREGATOR_UV_ID";
+    public static final String PERSISTENCE_UV_ID = "PERSISTENCE_UV_ID";
+
 }

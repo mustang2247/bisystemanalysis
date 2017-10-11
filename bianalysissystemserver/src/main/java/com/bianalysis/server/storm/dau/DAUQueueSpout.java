@@ -1,4 +1,4 @@
-package com.bianalysis.server.storm.sport;
+package com.bianalysis.server.storm.dau;
 
 
 import com.bianalysis.server.conf.FieldNames;
