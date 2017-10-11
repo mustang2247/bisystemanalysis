@@ -384,29 +384,6 @@ public class Util {
         return ret;
     }
 
-    public static long getCurrentRotationUnderTimeBuf(
-            long ts, long rotatePeriod, long clockSyncBufMillis) {
-        return getCurrentRollTsUnderTimeBuf(ts, rotatePeriod, clockSyncBufMillis);
-    }
-
-    public static long getLatestRotateTsAssociateWithRollPeriodUnderTimeBuf(
-            long ts, long rollPeriod, long rotatePeriod, long clockSyncBufMillis) {
-        return getLatestRollTsUnderTimeBuf(ts, rotatePeriod, clockSyncBufMillis) + (rotatePeriod - rollPeriod) * 1000L;
-    }
-
-    public static boolean belongToSameRotate(long rollTs1, long rollTs2, long rotatePeriod) {
-        return getCurrentRollTs(rollTs1, rotatePeriod) == getCurrentRollTs(rollTs2, rotatePeriod);
-    }
-
-    public static boolean isRollConcurrentWithRotate(long currentTs, long rollPeriod, long rotatePeriod) {
-        long currentClosestStepTs = Util.getClosestRollTs(currentTs, rollPeriod);
-        return (currentClosestStepTs + localTimezoneOffset) % (rotatePeriod * 1000) == 0;
-    }
-
-    public static int getMissRotateRollCount(long lastRotateTs, long resumeRollTs, long rotatePeriod) {
-        return (int) ((getCurrentRollTs(resumeRollTs, rotatePeriod) - getNextRollTs(lastRotateTs, rotatePeriod)) / (rotatePeriod * 1000L));
-    }
-
     public static String getParentAbsolutePath(String absolutePath) {
         return absolutePath.substring(0, absolutePath.lastIndexOf(
                 System.getProperty("file.separator")));
@@ -654,15 +631,4 @@ public class Util {
         return result;
     }
 
-    public static void logError(Log log, Throwable t, String... args) {
-        StringBuffer sb = new StringBuffer();
-        for (String arg : args) {
-            sb.append(arg).append(" ");
-        }
-        if (t == null) {
-            log.error(sb.toString());
-        } else {
-            log.error(sb.toString(), t);
-        }
-    }
 }
