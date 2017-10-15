@@ -45,15 +45,15 @@ public class MobileDAUTopology {
                 24).fieldsGrouping(DATA_PARSER_ID, new Fields("trainId", "deviceId"));
 
         // 统计不同设备的出现次数（UV）
-        builder.setBolt(Constants.PARTIAL_UV_ID, new UVBolt("APP"),
+        builder.setBolt(Constants.PARTIAL_UV_ID, new DataUVBolt("APP"),
                 16).fieldsGrouping(UDID_ID, new Fields("trainId", "dpid"));
 
         // 数据聚合
-        builder.setBolt(Constants.AGGREGATOR_UV_ID, new AggregatorUVBolt(),
+        builder.setBolt(Constants.AGGREGATOR_UV_ID, new DataAggregatorUVBolt(),
                 1).noneGrouping(Constants.PARTIAL_UV_ID);
 
         // 数据持久化
-        builder.setBolt(Constants.PERSISTENCE_UV_ID, new PersistenceUVBolt("APP",
+        builder.setBolt(Constants.PERSISTENCE_UV_ID, new DataPersistenceUVBolt("APP",
                 TopologyName), 2).shuffleGrouping(Constants.AGGREGATOR_UV_ID);
 
         Config conf = new Config();

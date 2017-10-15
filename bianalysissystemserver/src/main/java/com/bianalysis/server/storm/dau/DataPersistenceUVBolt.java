@@ -14,18 +14,18 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * 将数据写入MySQL中
+ * 将数据写入MySQL中 5
  * 或者缓存到Redis中
  */
-public class PersistenceUVBolt extends BaseRichBolt {
+public class DataPersistenceUVBolt extends BaseRichBolt {
 
-    private static final Logger logger = LoggerFactory.getLogger(PersistenceUVBolt.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataPersistenceUVBolt.class);
 
     private OutputCollector collector;
     private String appid;
     private String topName;
 
-    public PersistenceUVBolt(String appid, String topName) {
+    public DataPersistenceUVBolt(String appid, String topName) {
         this.appid = appid;
         this.topName = topName;
     }
@@ -51,16 +51,7 @@ public class PersistenceUVBolt extends BaseRichBolt {
      */
     @Override
     public void execute(Tuple tuple) {
-        String streamID = tuple.getSourceStreamId();
 
-        if (streamID.equals(FieldNames.STREAM_STARTUP)) {
-            String appid = tuple.getStringByField("appid");
-            String context = tuple.getStringByField("context");
-
-            JSONObject obj = JSONUtils.toJSONObject(context);
-
-            logger.info(FieldNames.STREAM_STARTUP + "  :  deviceid:    " + obj.get("deviceid") + appid);
-        }
 
     }
 

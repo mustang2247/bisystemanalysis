@@ -11,4 +11,8 @@ public class FieldNames {
     public static final String STREAM_QUEST = "quest";
     public static final String STREAM_REGISTER = "register";
 
+
+
+    public static final String STREAM_DAU = "STREAM_DAU";
+
 }

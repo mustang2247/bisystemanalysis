@@ -2,16 +2,19 @@ package com.bianalysis.server.storm.dau;
 
 
 import com.bianalysis.server.conf.FieldNames;
+import com.bianalysis.server.db.redis.RedisManager;
 import com.bianalysis.server.storm.blackhole.StormOffsetStrategy;
 import com.bianalysis.server.storm.consumer.ConsumerConfig;
 import com.bianalysis.server.utils.CatMetricUtil;
 import com.bianalysis.server.utils.Constants;
+import com.bianalysis.server.utils.Util;
 import org.apache.storm.metric.api.CountMetric;
 import org.apache.storm.spout.SpoutOutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
 import org.apache.storm.topology.base.BaseRichSpout;
 import org.apache.storm.tuple.Fields;
+import org.apache.storm.tuple.Values;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,10 +90,12 @@ public class DAUQueueSpout extends BaseRichSpout {
 
         ConsumerConfig config = new ConsumerConfig();
 
-        offsetStrategy  = new StormOffsetStrategy();
-        offsetStrategy.setConsumerGroup(group);
-        offsetStrategy.setSyncFrequency(syncFrequency);
-        offsetStrategy.setTopic(topic);
+
+
+//        offsetStrategy  = new StormOffsetStrategy();
+//        offsetStrategy.setConsumerGroup(group);
+//        offsetStrategy.setSyncFrequency(syncFrequency);
+//        offsetStrategy.setTopic(topic);
 
 //        // 消费者
 //        consumer = new Consumer(topic, group, config, offsetStrategy);
@@ -144,31 +149,32 @@ public class DAUQueueSpout extends BaseRichSpout {
 
         //===============================
 
-
-//        try {
-//            String content = RedisManager.getJedis().rpop(FieldNames.STREAM_INSTALL);
-//            if (content != null && content != "") {
+        try {
+            String content = RedisManager.getJedis().rpop(FieldNames.STREAM_INSTALL);
+            if (content != null && content != "") {
 //                logger.info(FieldNames.STREAM_INSTALL + "  :   " + "   content:   " + content);
-//                if (content == null || "nil".equals(content)) {
-//                    try {
-//                        Thread.sleep(300);
-//                    } catch (InterruptedException e) {
-//                    }
-//                } else {
-//                    try {
+                if (content == null || "nil".equals(content)) {
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                    }
+                } else {
+                    try {
 //                        JSONObject object = JSONUtils.toJSONObject(content);
 //                        if (object.get("appid") == null || object.get("appid") == "" || object.get("context") == null || object.get("context") == "") {
 //                            return;
 //                        }
-//                        collector.emit(FieldNames.STREAM_INSTALL, new Values(object.get("appid"), object.get("context")));
-//                    } catch (Exception e) {
-//                        logger.info(e.getMessage());
-//                    }
-//                }
-//            }
-//        } catch (Exception e) {
-//            logger.info(e.getMessage());
-//        }
+                        long messageId = Util.secureRandomLong();
+                        collector.emit(new Values(content), messageId);
+//                        collector.emit(FieldNames.STREAM_DAU, new Values(object.get("appid"), object.get("context")));
+                    } catch (Exception e) {
+                        logger.info(e.getMessage());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            logger.info(e.getMessage());
+        }
     }
 
     @Override

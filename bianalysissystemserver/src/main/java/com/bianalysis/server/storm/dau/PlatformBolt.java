@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 /**
- * Android设备处理
+ * Android设备处理 2
  */
 public class PlatformBolt extends BaseRichBolt {
 
