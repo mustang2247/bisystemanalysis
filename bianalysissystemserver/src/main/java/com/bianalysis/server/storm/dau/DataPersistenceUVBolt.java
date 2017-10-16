@@ -1,8 +1,6 @@
 package com.bianalysis.server.storm.dau;
 
-import com.alibaba.fastjson.JSONObject;
-import com.bianalysis.server.conf.FieldNames;
-import com.bianalysis.server.utils.JSONUtils;
+import com.bianalysis.server.db.redis.RedisManager;
 import org.apache.storm.task.OutputCollector;
 import org.apache.storm.task.TopologyContext;
 import org.apache.storm.topology.OutputFieldsDeclarer;
@@ -10,6 +8,7 @@ import org.apache.storm.topology.base.BaseRichBolt;
 import org.apache.storm.tuple.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import redis.clients.jedis.Jedis;
 
 import java.util.Map;
 
@@ -24,6 +23,8 @@ public class DataPersistenceUVBolt extends BaseRichBolt {
     private OutputCollector collector;
     private String appid;
     private String topName;
+
+    private static Jedis jedis;
 
     public DataPersistenceUVBolt(String appid, String topName) {
         this.appid = appid;
@@ -41,6 +42,8 @@ public class DataPersistenceUVBolt extends BaseRichBolt {
     @Override
     public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
         collector = outputCollector;
+
+        jedis = RedisManager.getJedis();
     }
 
     /**
